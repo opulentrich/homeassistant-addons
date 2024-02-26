@@ -102,7 +102,7 @@ ghoma.onNew = function(plug) {
   mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toLowerCase());
 }
 
-ghome.onClose = function(plug) {
+ghoma.onClose = function(plug) {
   console.log('Unregisterd plug '+plug.id);
   mqttclient.publish('ghoma2mqtt/'+plug.id+'/avail', 'offline');
 }
