@@ -92,12 +92,17 @@ app.get('/alloff', function (req, res) {
 
 // Register a listener for new plugs, this is only for a log output
 ghoma.onNew = function(plug) {
-  console.log('Registerd plug from ' + plug.remoteAddress+" with id "+plug.id);
+  console.log('Registerd plug from ' + plug.remoteAddress + ' with id '+plug.id);
+  var discoveryTopic = "homeassistant/switch/ghoma_" + plug.id + "/config";
+  var discoveryPayload = '{ "~": "ghoma2mqtt/'+plug.id+'", "name": "deviceName Switch", "opt": false, "device": { "identifiers": [ "ghoma_"' + plug.id + '" ], "manufacturer": "G-Homa", "model": "Plug", "name": "'+plug.id+'" }, "avty_t": "lastWill", "uniq_id": "ghoma_'+plug.id+'", "stat_t": "~/state", "cmd_t": "~/set" }'
+  mqttclient.publish(discoveryTopic, discoveryPayload);
+  console.log('MQTT Discovery Topic: ' + discoveryTopic)
+  console.log('MQTT Discovery Payload: ' + discoveryPayload)
 }
 
 ghoma.onStatusChange = function(plug) {
   console.log('New state of ' + plug.remoteAddress+' is '+plug.state+' triggered '+plug.triggered);
-  mqttclient.publish('ghoma/'+plug.id, plug.state.toUpperCase());
+  mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toLowerCase());
 }
 
 mqttclient.on("connect", () => {
@@ -110,15 +115,18 @@ mqttclient.on("connect", () => {
 
 mqttclient.on('message', function (topic, message) {
   // message is Buffer
-  var plug = ghoma.get(topic.toString().substr(6));
-  if ( plug ) {
-     if(message.toString().toUpperCase() === 'ON')
-        plug.on();
-     if(message.toString().toUpperCase() === 'OFF')
-        plug.off();
-  }
-  else {
-    console.log('No plug registered: '+topic.toString().substr(6)+' for message '+message.toString());  
+  topicArray = topic.toString().split("/");
+  if ( topicArray[2] === 'set' ) {
+    var plug = ghoma.get(topicArray[1]);
+    if ( plug ) {
+      if(message.toString().toLowerCase() === 'on')
+          plug.on();
+      if(message.toString().toLowerCase() === 'off')
+          plug.off();
+    }
+    else {
+      console.log('No plug registered: '+topicArray[1]+' for message '+message.toString());  
+    }
   }
 });
 
