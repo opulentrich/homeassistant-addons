@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
 name: ghoma2mqtt add-on
-version: "1.2.0"
+version: "0.1.0"
 slug: ghome2mqtt
 description: ghoma2mqtt add-on
 url: "https://github.com/opulentrich/ghoma2mqtt/tree/main/ghoma2mqtt"
