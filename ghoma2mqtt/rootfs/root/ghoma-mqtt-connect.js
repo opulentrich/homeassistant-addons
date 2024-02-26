@@ -98,6 +98,7 @@ ghoma.onNew = function(plug) {
   mqttclient.publish(discoveryTopic, discoveryPayload);
   console.log('MQTT Discovery Topic: ' + discoveryTopic)
   console.log('MQTT Discovery Payload: ' + discoveryPayload)
+  mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toLowerCase());
 }
 
 ghoma.onStatusChange = function(plug) {
@@ -116,7 +117,9 @@ mqttclient.on("connect", () => {
 mqttclient.on('message', function (topic, message) {
   // message is Buffer
   topicArray = topic.toString().split("/");
+  //if ( topicArray.length == 3 )
   if ( topicArray[2] === 'set' ) {
+    console.log('MQTT Requested received to set '+topicArray[1]+' to '+topicArray[2])
     var plug = ghoma.get(topicArray[1]);
     if ( plug ) {
       if(message.toString().toLowerCase() === 'on')
