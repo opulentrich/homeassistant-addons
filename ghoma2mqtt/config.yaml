@@ -1,8 +1,8 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
-name: ghoma2mqtt add-on
+name: G-Homa2MQTT
 version: "0.1.5"
 slug: ghoma2mqtt
-description: ghoma2mqtt add-on
+description: Bridge to connect G-Homa plugs to HomeAssistant via MQTT
 url: "https://github.com/opulentrich/ghoma2mqtt/tree/main/ghoma2mqtt"
 arch:
   - armhf
