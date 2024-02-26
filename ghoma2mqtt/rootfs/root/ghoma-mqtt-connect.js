@@ -100,6 +100,14 @@ ghoma.onStatusChange = function(plug) {
   mqttclient.publish('ghoma/'+plug.id, plug.state.toUpperCase());
 }
 
+mqttclient.on("connect", () => {
+  mqttclient.subscribe('ghoma2mqtt/#', (err) => {
+    if (!err) {
+      console.log('MQTT Connected and subscribed')
+    }
+  });
+});
+
 mqttclient.on('message', function (topic, message) {
   // message is Buffer
   var plug = ghoma.get(topic.toString().substr(6));
@@ -114,9 +122,9 @@ mqttclient.on('message', function (topic, message) {
   }
 });
 
+console.log('Connecting to MQTT server : '+process.env.MQTT_SERVER+' with username '+process.env.MQTT_USERNAME)
 // Start the ghoma control server listening server on this port
 ghoma.startServer(ghomaPort);
-mqttclient.subscribe('ghoma2mqtt/#');
 
 // Start the express http server listening
 app.listen(httpPort, function () {
