@@ -99,7 +99,7 @@ ghoma.onNew = function(plug) {
   console.log('MQTT Discovery Topic: ' + discoveryTopic)
   console.log('MQTT Discovery Payload: ' + discoveryPayload)
   mqttclient.publish('ghoma2mqtt/'+plug.id+'/avail', 'online');
-  mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toLowerCase());
+  mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toUpperCase());
 }
 
 ghoma.onClose = function(plug) {
@@ -109,7 +109,7 @@ ghoma.onClose = function(plug) {
 
 ghoma.onStatusChange = function(plug) {
   console.log('New state of ' + plug.remoteAddress+' is '+plug.state+' triggered '+plug.triggered);
-  mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toLowerCase());
+  mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toUpperCase());
 }
 
 mqttclient.on("connect", () => {
