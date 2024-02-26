@@ -94,11 +94,17 @@ app.get('/alloff', function (req, res) {
 ghoma.onNew = function(plug) {
   console.log('Registerd plug from ' + plug.remoteAddress + ' with id '+plug.id);
   var discoveryTopic = "homeassistant/switch/ghoma_" + plug.id + "/config";
-  var discoveryPayload = '{ "~": "ghoma2mqtt/'+plug.id+'", "name": "GHoma Plug ' + plug.id + '", "opt": false, "device": { "identifiers": [ "ghoma_' + plug.id + '" ], "manufacturer": "G-Homa", "model": "Plug", "name": "'+plug.id+'" }, "avty_t": "lastWill", "uniq_id": "ghoma_'+plug.id+'", "stat_t": "~/state", "cmd_t": "~/set" }'
+  var discoveryPayload = '{ "~": "ghoma2mqtt/'+plug.id+'", "name": "GHoma Plug ' + plug.id + '", "opt": false, "device": { "identifiers": [ "ghoma_' + plug.id + '" ], "manufacturer": "G-Homa", "model": "Plug", "name": "'+plug.id+'" }, "avty_t": "~/avail", "uniq_id": "ghoma_'+plug.id+'", "stat_t": "~/state", "cmd_t": "~/set" }'
   mqttclient.publish(discoveryTopic, discoveryPayload);
   console.log('MQTT Discovery Topic: ' + discoveryTopic)
   console.log('MQTT Discovery Payload: ' + discoveryPayload)
+  mqttclient.publish('ghoma2mqtt/'+plug.id+'/avail', 'online');
   mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toLowerCase());
+}
+
+ghome.onClose = function(plug) {
+  console.log('Unregisterd plug '+plug.id);
+  mqttclient.publish('ghoma2mqtt/'+plug.id+'/avail', 'offline');
 }
 
 ghoma.onStatusChange = function(plug) {
