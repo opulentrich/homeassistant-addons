@@ -16,7 +16,7 @@
 #bashio::log.info "${message:="Hello World..."}"
 
 ## Run your program
-export MQTT_USER="$(bashio::services 'mqtt' 'username')"
+export MQTT_USERNAME="$(bashio::services 'mqtt' 'username')"
 export MQTT_PASSWORD="$(bashio::services 'mqtt' 'password')"
 if bashio::var.true "$(bashio::services 'mqtt' 'ssl')"; then
     export MQTT_SERVER="mqtts://$(bashio::services 'mqtt' 'host'):$(bashio::services 'mqtt' 'port')"
