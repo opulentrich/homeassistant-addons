@@ -16,4 +16,11 @@ message=$(bashio::config 'message')
 bashio::log.info "${message:="Hello World..."}"
 
 ## Run your program
+export MQTT_USER="$(bashio::services 'mqtt' 'username')"
+export MQTT_PASSWORD="$(bashio::services 'mqtt' 'password')"
+if bashio::var.true "$(bashio::services 'mqtt' 'ssl')"; then
+    export MQTT_SERVER="mqtts://$(bashio::services 'mqtt' 'host'):$(bashio::services 'mqtt' 'port')"
+else
+    export MQTT_SERVER="mqtt://$(bashio::services 'mqtt' 'host'):$(bashio::services 'mqtt' 'port')"
+fi
 exec /usr/bin/node /root/ghoma-mqtt-connect.js

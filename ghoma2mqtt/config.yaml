@@ -18,3 +18,7 @@ options:
 schema:
   message: "str?"
 image: "ghcr.io/opulentrich/{arch}-addon-ghoma2mqtt"
+ports:
+  4196/tcp: 4196
+services:
+  - mqtt

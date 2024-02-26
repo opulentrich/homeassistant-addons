@@ -15,4 +15,3 @@ WORKDIR /root
 
 RUN apk update && apk add nodejs npm
 RUN npm install ghoma express mqtt
-
