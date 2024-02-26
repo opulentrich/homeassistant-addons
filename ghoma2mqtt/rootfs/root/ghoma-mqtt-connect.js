@@ -17,7 +17,7 @@ var ghoma = require('ghoma');
 var express = require('express');
 var app = express();
 var mqtt = require('mqtt')
-var mqttclient  = mqtt.connect('mqtt://'+process.env.MQTT_SERVER, { username: process.env.MQTT_USERNAME, password: process.env.MQTT_PASSWORD } )
+var mqttclient  = mqtt.connect(process.env.MQTT_SERVER, { username: process.env.MQTT_USERNAME, password: process.env.MQTT_PASSWORD } )
 
 // Uncomment this line to get a detailed log output
 //ghoma.log=console.log;
@@ -104,16 +104,19 @@ mqttclient.on('message', function (topic, message) {
   // message is Buffer
   var plug = ghoma.get(topic.toString().substr(6));
   if ( plug ) {
-     if(message.toString() === 'ON')
+     if(message.toString().toUpperCase() === 'ON')
         plug.on();
-     if(message.toString() === 'OFF')
+     if(message.toString().toUpperCase() === 'OFF')
         plug.off();
-  } 
+  }
+  else {
+    console.log('No plug registered: '+topic.toString().substr(6)+' for message '+message.toString());  
+  }
 });
 
 // Start the ghoma control server listening server on this port
 ghoma.startServer(ghomaPort);
-mqttclient.subscribe('ghoma/#');
+mqttclient.subscribe('ghoma2mqtt/#');
 
 // Start the express http server listening
 app.listen(httpPort, function () {
