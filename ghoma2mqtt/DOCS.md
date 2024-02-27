@@ -1,10 +1,12 @@
-# Home Assistant Add-on: Example add-on
+# Home Assistant Add-on: GHoma2MQTT
 
 ## How to use
 
-This add-on really does nothing. It is just an example.
+Install add-on. It will connect to MQTT and start listening for GHoma Plugs on port 4196. When a plug connects an MQTT auto discovery is sent to HomeAsssitant and the plug should appear in the MQTT integration.
 
-When started it will print the configured message or "Hello world" in the log.
+Based off the work of others !
 
-It will also print "All done!" in `/share/example_addon_output.txt` to show
-simple example of the usage of `map` in addon config.
+https://github.com/rodney42/node-ghoma
+https://community.openhab.org/t/g-homa-wifi-smart-socket-emw302wf-and-emw302wfo-with-openhab2/21524
+https://github.com/opulentrich/ghoma-docker
+https://github.com/zigbee2mqtt/hassio-zigbee2mqtt
