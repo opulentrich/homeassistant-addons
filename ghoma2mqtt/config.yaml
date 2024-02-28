@@ -3,7 +3,7 @@ name: G-Homa2MQTT
 version: "0.3.0"
 slug: ghoma2mqtt
 description: Bridge to connect G-Homa plugs to HomeAssistant via MQTT
-url: "https://github.com/opulentrich/ghoma2mqtt/tree/main/ghoma2mqtt"
+url: "https://github.com/opulentrich/homeassistant-addons/tree/main/ghoma2mqtt"
 arch:
   - armhf
   - armv7
