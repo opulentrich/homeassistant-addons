@@ -90,6 +90,7 @@ app.get('/alloff', function (req, res) {
   res.sendStatus(200);
 });
 
+
 // Register a listener for new plugs, this is only for a log output
 ghoma.onNew = function(plug) {
   console.log('Registerd plug from ' + plug.remoteAddress + ' with id '+plug.id);
@@ -138,6 +139,13 @@ mqttclient.on('message', function (topic, message) {
 console.log('Connecting to MQTT server : '+process.env.MQTT_SERVER+' with username '+process.env.MQTT_USERNAME)
 // Start the ghoma control server listening server on this port
 ghoma.startServer(ghomaPort);
+
+setInterval(function updateStatus() {
+  ghoma.forEach(function(plug) { 
+    mqttclient.publish('ghoma2mqtt/'+plug.id+'/avail', 'online');
+    mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toUpperCase());
+  });
+}(), 300000);
 
 // Start the express http server listening
 app.listen(httpPort, function () {
