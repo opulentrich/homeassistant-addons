@@ -136,16 +136,18 @@ mqttclient.on('message', function (topic, message) {
   }
 });
 
-console.log('Connecting to MQTT server : '+process.env.MQTT_SERVER+' with username '+process.env.MQTT_USERNAME)
-// Start the ghoma control server listening server on this port
-ghoma.startServer(ghomaPort);
-
-setInterval(function updateStatus() {
+function updateStatus() {
   ghoma.forEach(function(plug) { 
     mqttclient.publish('ghoma2mqtt/'+plug.id+'/avail', 'online');
     mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toUpperCase());
   });
-}(), 300000);
+}
+
+console.log('Connecting to MQTT server : '+process.env.MQTT_SERVER+' with username '+process.env.MQTT_USERNAME)
+// Start the ghoma control server listening server on this port
+ghoma.startServer(ghomaPort);
+
+setInterval(updateStatus, 300000);
 
 // Start the express http server listening
 app.listen(httpPort, function () {
