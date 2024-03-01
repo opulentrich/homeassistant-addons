@@ -116,7 +116,7 @@ mqttclient.on("connect", () => {
       console.log('MQTT subscribed to ghoma2mqtt')
     }
   });
-  mqttclient.subscribe('ghoma2mqtt/#', (err) => {
+  mqttclient.subscribe('homeassistant/status', (err) => {
     if (!err) {
       console.log('MQTT subscribed to homeassistant/status')
     }
@@ -142,6 +142,7 @@ mqttclient.on('message', function (topic, message) {
   // message is Buffer
   if (topic === 'homeassistant/status' ) {
     if ( message === 'online' ) {
+      console.log('HomeAssistant startup detected - sending discovery')
       sendDiscoveryAll();
       updateStatus();
     }
