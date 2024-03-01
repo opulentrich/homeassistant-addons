@@ -113,28 +113,23 @@ ghoma.onStatusChange = function(plug) {
 mqttclient.on("connect", () => {
   mqttclient.subscribe('ghoma2mqtt/#', (err) => {
     if (!err) {
-      console.log('MQTT Connected and subscribed')
+      console.log('MQTT subscribed to ghoma2mqtt')
+    }
+  });
+  mqttclient.subscribe('ghoma2mqtt/#', (err) => {
+    if (!err) {
+      console.log('MQTT subscribed to homeassistant/status')
     }
   });
 });
 
-mqttclient.on('message', function (topic, message) {
-  // message is Buffer
-  topicArray = topic.toString().split("/");
-  //if ( topicArray.length == 3 )
-  if ( topicArray[2] === 'set' ) {
-    var plug = ghoma.get(topicArray[1]);
-    if ( plug ) {
-      if(message.toString().toLowerCase() === 'on')
-          plug.on();
-      if(message.toString().toLowerCase() === 'off')
-          plug.off();
-    }
-    else {
-      console.log('No plug registered: '+topicArray[1]+' for message '+message.toString());  
-    }
-  }
-});
+function sendDiscoveryAll() {
+  ghoma.forEach(function(plug) {
+    var discoveryTopic = "homeassistant/switch/ghoma_" + plug.id + "/config";
+    var discoveryPayload = '{ "~": "ghoma2mqtt/'+plug.id+'", "name": "GHoma Plug", "opt": false, "device": { "identifiers": [ "ghoma_' + plug.id + '" ], "manufacturer": "G-Homa", "model": "Plug", "name": "'+plug.id+'" }, "avty_t": "~/avail", "uniq_id": "ghoma_'+plug.id+'", "stat_t": "~/state", "cmd_t": "~/set" }'
+    mqttclient.publish(discoveryTopic, discoveryPayload);  
+  });
+}
 
 function updateStatus() {
   ghoma.forEach(function(plug) { 
@@ -142,6 +137,32 @@ function updateStatus() {
     mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toUpperCase());
   });
 }
+
+mqttclient.on('message', function (topic, message) {
+  // message is Buffer
+  if (topic === 'homeassistant/status' ) {
+    if ( message === 'online' ) {
+      sendDiscoveryAll();
+      updateStatus();
+    }
+  }
+
+  topicArray = topic.toString().split("/");
+  if ( topicArray[0] === 'ghoma2mqtt' ) {
+    if ( topicArray[2] === 'set' ) {
+      var plug = ghoma.get(topicArray[1]);
+      if ( plug ) {
+        if(message.toString().toLowerCase() === 'on')
+            plug.on();
+        if(message.toString().toLowerCase() === 'off')
+            plug.off();
+      }
+      else {
+        console.log('No plug registered: '+topicArray[1]+' for message '+message.toString());  
+      }
+    }
+  }
+});
 
 console.log('Connecting to MQTT server : '+process.env.MQTT_SERVER+' with username '+process.env.MQTT_USERNAME)
 // Start the ghoma control server listening server on this port
