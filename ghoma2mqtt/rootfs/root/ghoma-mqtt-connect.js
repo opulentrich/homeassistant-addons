@@ -140,15 +140,18 @@ function updateStatus() {
 
 mqttclient.on('message', function (topic, message) {
   // message is Buffer
-  if (topic === 'homeassistant/status' ) {
-    if ( message === 'online' ) {
-      console.log('HomeAssistant startup detected - sending discovery')
-      sendDiscoveryAll();
-      updateStatus();
+  topicArray = topic.toString().split("/");
+
+  if (topicArray[0] === 'homeassistant' ) {
+    if ( topicArray[1] === 'status' ) {
+      if ( message.toString().toLowerCase() === 'online' ) {
+        console.log('HomeAssistant startup detected - sending discovery')
+        sendDiscoveryAll();
+        updateStatus();
+      }
     }
   }
 
-  topicArray = topic.toString().split("/");
   if ( topicArray[0] === 'ghoma2mqtt' ) {
     if ( topicArray[2] === 'set' ) {
       var plug = ghoma.get(topicArray[1]);
