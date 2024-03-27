@@ -25,6 +25,8 @@ var mqttclient  = mqtt.connect(process.env.MQTT_SERVER, { username: process.env.
 var httpPort = 3000;    // Express http listening port
 var ghomaPort = 4196;   // G-Homa default port
 
+var discovery = 2;
+
 /*
  * List all registered plugs.
  */
@@ -124,6 +126,7 @@ mqttclient.on("connect", () => {
 });
 
 function sendDiscoveryAll() {
+  console.log('Sending Discovery');
   ghoma.forEach(function(plug) {
     var discoveryTopic = "homeassistant/switch/ghoma_" + plug.id + "/config";
     var discoveryPayload = '{ "~": "ghoma2mqtt/'+plug.id+'", "name": "GHoma Plug", "opt": false, "device": { "identifiers": [ "ghoma_' + plug.id + '" ], "manufacturer": "G-Homa", "model": "Plug", "name": "'+plug.id+'" }, "avty_t": "~/avail", "uniq_id": "ghoma_'+plug.id+'", "stat_t": "~/state", "cmd_t": "~/set" }'
@@ -132,6 +135,10 @@ function sendDiscoveryAll() {
 }
 
 function updateStatus() {
+  if ( discovery > 0 ) {
+    discovery = discovery - 1;
+    sendDiscoveryAll();
+  }
   ghoma.forEach(function(plug) { 
     mqttclient.publish('ghoma2mqtt/'+plug.id+'/avail', 'online');
     mqttclient.publish('ghoma2mqtt/'+plug.id+'/state', plug.state.toUpperCase());
@@ -145,9 +152,8 @@ mqttclient.on('message', function (topic, message) {
   if (topicArray[0] === 'homeassistant' ) {
     if ( topicArray[1] === 'status' ) {
       if ( message.toString().toLowerCase() === 'online' ) {
-        console.log('HomeAssistant startup detected - sending discovery')
-        sendDiscoveryAll();
-        updateStatus();
+        console.log('HomeAssistant startup detected')
+        discovery = 2;
       }
     }
   }
