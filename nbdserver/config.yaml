@@ -16,3 +16,5 @@ map:
 image: "ghcr.io/opulentrich/{arch}-addon-nbdserver"
 ports:
   10809/tcp: 10809
+devices:
+  - /dev/sdb1

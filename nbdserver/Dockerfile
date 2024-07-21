@@ -14,3 +14,5 @@ COPY rootfs /
 WORKDIR /root
 
 RUN apk update && apk add nbd
+RUN chmod +x /etc/services.d/example/run
+RUN chmod +x /etc/services.d/example/finish
