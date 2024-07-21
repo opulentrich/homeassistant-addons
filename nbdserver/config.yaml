@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
 name: NBDServer
-version: "0.1.0"
+version: "0.1.1"
 slug: nbdserver
 description: NBDServer to export USB attached disks to other machines 
 url: "https://github.com/opulentrich/homeassistant-addons/tree/main/nbdserver"
