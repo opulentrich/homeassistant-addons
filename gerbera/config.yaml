@@ -1,8 +1,8 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration#add-on-config
-name: G-Homa2MQTT
-version: "0.3.6"
+name: Gerbera
+version: "0.1.0"
 slug: gerbera
-description: Bridge to connect G-Homa plugs to HomeAssistant via MQTT
+description: Gerbera UPNP/DLNA server
 url: "https://github.com/opulentrich/homeassistant-addons/tree/main/gerbera"
 arch:
   - armhf
@@ -13,8 +13,7 @@ arch:
 init: false
 map:
   - share:rw
+  - media:r
 image: "ghcr.io/opulentrich/{arch}-addon-gerbera"
 ports:
   49152/tcp: 49152
-services:
-  - mqtt:need
