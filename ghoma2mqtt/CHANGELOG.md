@@ -1,4 +1,8 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
+## 0.3.9
+
+- Revert fix and increase update freq
+
 ## 0.3.8
 
 - More startup fixes
