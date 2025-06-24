@@ -154,8 +154,8 @@ mqttclient.on('message', function (topic, message) {
       if ( message.toString().toLowerCase() === 'online' ) {
         console.log('HomeAssistant startup detected')
         discovery = 2;
-        setTimeout(sendDiscoveryAll(), 1000);
-        setTimeout(sendDiscoveryAll(), 2000);        
+        setTimeout(sendDiscoveryAll, 1000);
+        setTimeout(sendDiscoveryAll, 2000);        
       }
     }
   }
