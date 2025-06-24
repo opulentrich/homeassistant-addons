@@ -153,9 +153,7 @@ mqttclient.on('message', function (topic, message) {
     if ( topicArray[1] === 'status' ) {
       if ( message.toString().toLowerCase() === 'online' ) {
         console.log('HomeAssistant startup detected')
-        discovery = 2;
-        setTimeout(sendDiscoveryAll, 1000);
-        setTimeout(sendDiscoveryAll, 2000);        
+        discovery = 4;
       }
     }
   }
@@ -180,7 +178,7 @@ console.log('Connecting to MQTT server : '+process.env.MQTT_SERVER+' with userna
 // Start the ghoma control server listening server on this port
 ghoma.startServer(ghomaPort);
 
-setInterval(updateStatus, 300000);
+setInterval(updateStatus, 120000);
 
 // Start the express http server listening
 app.listen(httpPort, function () {
