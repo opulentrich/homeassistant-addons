@@ -1,4 +1,8 @@
 <!-- https://developers.home-assistant.io/docs/add-ons/presentation#keeping-a-changelog -->
+## 0.3.7
+
+- Startup fixes
+
 ## 0.3.6
 
 - Discovery fixes for HA restarts
